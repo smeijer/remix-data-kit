@@ -24,7 +24,7 @@
 		"lint": "eslint --fix .",
 		"type-check": "tsc --noEmit",
 		"test": "borp",
-		"prepack": "npm run build && clean-pkg-json"
+		"prepack": "npm run build"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pretty-quick --staged"
@@ -46,7 +46,6 @@
 		"@smeijer/tsconfig": "^1.0.0",
 		"@types/node": "^18.19.31",
 		"borp": "^0.13.0",
-		"clean-pkg-json": "^1.2.0",
 		"eslint-plugin-best-practices": "^0.0.1",
 		"pkgroll": "^2.0.2",
 		"pretty-quick": "^4.0.0",
