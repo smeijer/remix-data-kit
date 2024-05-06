@@ -10,7 +10,24 @@ npm install remix-data-kit
 
 ## Usage
 
-Without `remix-data-kit`
+We provide the default remix `ActionFunctionArgs` as argument, and extend it with a `payload` property, that contains the FormData as an expanded object using [form-data-kit]. No more manually handling formData.
+
+```ts
+import { createActionHandlers } from 'remix-data-kit';
+
+export const actions = createActionHandlers({
+	CREATE_COMMENT: ({ request, context, payload }) => {
+		assertUser(request);
+		return context.api.createComment({ user, comment: payload });
+	},
+	UPDATE_COMMENT: ({ request, context, payload }) => {
+		assertUser(request);
+		return context.api.updateComment({ user, comment: payload });
+	},
+});
+```
+
+Without `remix-data-kit` it would look something like this:
 
 ```ts
 export const actions = async ({ request, context }: ActionFunctionArgs) => {
@@ -41,32 +58,13 @@ export const actions = async ({ request, context }: ActionFunctionArgs) => {
 };
 ```
 
-Using `remix-data-kit`
-
-We provide the default remix `ActionFunctionArgs` as argument, and extend it with a `payload` property, that contains the FormData as an expanded object using [form-data-kit]. No more manually handling formData.
-
-```ts
-import { createActionHandlers } from 'remix-data-kit';
-
-export const actions = createActionHandlers({
-	CREATE_COMMENT: ({ request, context, payload }) => {
-		assertUser(request);
-		return context.api.createComment({ user, comment: payload });
-	},
-	UPDATE_COMMENT: ({ request, context, payload }) => {
-		assertUser(request);
-		return context.api.updateComment({ user, comment: payload });
-	},
-});
-```
-
 ## Validation
 
 To ease validation, we've wrapped the `assertType` utility from [typebox-assert], that asserts and narrows the type of the submitted data using typebox.
 
 `assertType` throws a `Response` with errors when the type is invalid. It also mutates the object to:
 
-- remove provided properties that are not defined in the schema
+- remove additional properties that are not defined in the schema
 - add missing properties by using schema defaults
 - cast property types where possible
 
