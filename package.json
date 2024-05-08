@@ -1,6 +1,6 @@
 {
 	"name": "remix-data-kit",
-	"version": "0.2.0",
+	"version": "0.3.0",
 	"description": "a kit to simplify handling form submissions in remix",
 	"license": "MIT",
 	"repository": {
@@ -13,6 +13,11 @@
 	"homepage": "https://github.com/smeijer/remix-data-kit#readme",
 	"main": "./dist/index.js",
 	"types": "./dist/index.d.ts",
+	"bin": "./dist/cli.js",
+	"exports": {
+		"./actions": "./dist/actions.js",
+		"./assert": "./dist/assert.js"
+	},
 	"type": "module",
 	"engines": {
 		"node": ">=18"
@@ -45,6 +50,7 @@
 		"@smeijer/eslint-config": "^1.5.0",
 		"@smeijer/tsconfig": "^1.0.0",
 		"@types/node": "^18.19.31",
+		"@types/yargs": "^17.0.32",
 		"borp": "^0.13.0",
 		"eslint-plugin-best-practices": "^0.0.1",
 		"pkgroll": "^2.0.2",
@@ -59,6 +65,11 @@
 	},
 	"dependencies": {
 		"form-data-kit": "^0.1.0",
-		"typebox-assert": "^0.2.0"
+		"glob": "^10.3.12",
+		"listr2": "^8.2.1",
+		"picocolors": "^1.0.0",
+		"schema2typebox": "^1.7.4",
+		"typebox-assert": "^0.2.0",
+		"yargs": "^17.7.2"
 	}
 }
