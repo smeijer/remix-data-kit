@@ -22,6 +22,9 @@ async function handleFormSubmission(args: ActionFunctionArgs, handlers: Submissi
 
 export function createActionHandlers(handlers: SubmissionHandlers) {
 	return async function action(args: ActionFunctionArgs): Promise<Response> {
-		return await handleFormSubmission(args, handlers);
+		return await handleFormSubmission(args, handlers).catch((err) => {
+			if (err instanceof Response) return err;
+			throw err;
+		});
 	};
 }
