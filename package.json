@@ -1,6 +1,6 @@
 {
 	"name": "remix-data-kit",
-	"version": "0.3.0",
+	"version": "0.3.1",
 	"description": "a kit to simplify handling form submissions in remix",
 	"license": "MIT",
 	"repository": {
@@ -15,6 +15,7 @@
 	"types": "./dist/index.d.ts",
 	"bin": "./dist/cli.js",
 	"exports": {
+		".": "./dist/index.js",
 		"./actions": "./dist/actions.js",
 		"./assert": "./dist/assert.js"
 	},
