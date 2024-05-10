@@ -6,7 +6,8 @@ export type SubmissionHandler = (args: SubmissionHandlerArgs) => Promise<Respons
 export type SubmissionHandlers = Record<string, SubmissionHandler>;
 
 async function handleFormSubmission(args: ActionFunctionArgs, handlers: SubmissionHandlers) {
-	const { _intent: action, ...payload } = expand(await args.request.formData());
+	const request = args.request.clone();
+	const { _intent: action, ...payload } = expand(await request.formData());
 
 	if (!action || typeof action !== 'string') {
 		throw json({ ok: false, message: `No intent specified in form data` }, { status: 404 });
