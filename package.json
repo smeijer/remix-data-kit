@@ -11,13 +11,15 @@
 	"author": "Stephan Meijer <stephan.meijer@gmail.com> (meijer.ws)",
 	"bugs": "https://github.com/smeijer/remix-data-kit/issues",
 	"homepage": "https://github.com/smeijer/remix-data-kit#readme",
-	"main": "./dist/index.js",
-	"types": "./dist/index.d.ts",
+	"main": "./dist/index.cjs",
+	"module": "./dist/index.mjs",
+	"types": "./dist/index.d.cts",
 	"bin": "./dist/cli.js",
 	"exports": {
-		".": "./dist/index.js",
-		"./actions": "./dist/actions.js",
-		"./assert": "./dist/assert.js"
+		".": {
+			"types": "./dist/index.d.ts",
+			"default": "./dist/index.js"
+		},
 	},
 	"type": "module",
 	"engines": {
