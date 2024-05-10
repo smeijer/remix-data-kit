@@ -43,7 +43,7 @@ function isValueError(value: unknown): value is ValueError {
  */
 export function isAssertionError(value: unknown): value is SerializedAssertionError {
 	if (value == null || typeof value !== 'object') return false;
-	if (!('ok' in value) || value.ok !== true) return false;
+	if (!('ok' in value) || value.ok !== false) return false;
 	if (!('message' in value) || typeof value.message !== 'string') return false;
 	if (!('errors' in value) || !Array.isArray(value.errors)) return false;
 	if (!value.errors.every((x) => isValueError(x))) return false;
