@@ -1,9 +1,9 @@
 import assert from 'node:assert/strict';
 import test from 'node:test';
 
-import { createActionHandlers } from './actions.js';
+import { createActionHandler } from './actions.js';
 
-async function post(action: ReturnType<typeof createActionHandlers>, formData: FormData): Promise<unknown> {
+async function post(action: ReturnType<typeof createActionHandler>, formData: FormData): Promise<unknown> {
 	const url = new URL('https://example.com');
 	const request = new Request(url, {
 		method: 'POST',
@@ -22,7 +22,7 @@ async function post(action: ReturnType<typeof createActionHandlers>, formData: F
 }
 
 await test('calls handler for submission', async () => {
-	const action = createActionHandlers({
+	const action = createActionHandler({
 		CREATE_COMMENT: ({ payload }) => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			return new Response(JSON.stringify({ ok: true, data: payload }));
@@ -45,7 +45,7 @@ await test('calls handler for submission', async () => {
 });
 
 await test('returns error when _intent is missing', async () => {
-	const action = createActionHandlers({
+	const action = createActionHandler({
 		CREATE_COMMENT: ({ payload }) => {
 			// eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
 			return new Response(JSON.stringify({ ok: true, data: payload }));
@@ -63,7 +63,7 @@ await test('returns error when _intent is missing', async () => {
 });
 
 await test('returns error when no handler exists for _intent', async () => {
-	const action = createActionHandlers({
+	const action = createActionHandler({
 		CREATE_COMMENT: (data) => {
 			return new Response(JSON.stringify({ ok: true, data }));
 		},

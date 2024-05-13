@@ -13,9 +13,9 @@ npm install remix-data-kit
 We provide the default remix `ActionFunctionArgs` as argument, and extend it with a `payload` property, that contains the FormData as an expanded object using [form-data-kit]. No more manually handling formData.
 
 ```ts
-import { createActionHandlers } from 'remix-data-kit';
+import { createActionHandler } from 'remix-data-kit';
 
-export const actions = createActionHandlers({
+export const action = createActionHandler({
 	CREATE_COMMENT: ({ request, context, payload }) => {
 		assertUser(request);
 		return context.api.createComment({ user, comment: payload });
@@ -30,7 +30,7 @@ export const actions = createActionHandlers({
 Without `remix-data-kit` it would look something like this:
 
 ```ts
-export const actions = async ({ request, context }: ActionFunctionArgs) => {
+export const action = async ({ request, context }: ActionFunctionArgs) => {
 	const formData = await request.formData();
 	const _intent = formData.get('_intent');
 
@@ -69,7 +69,7 @@ To ease validation, we've wrapped the `assertType` utility from [typebox-assert]
 - cast property types where possible
 
 ```ts
-import { createActionHandlers, assertType } from 'remix-data-kit';
+import { createActionHandler, assertType } from 'remix-data-kit';
 import { Type } from '@sinclair/typebox';
 
 const CreateComment = Type.Object(
@@ -87,7 +87,7 @@ const UpdateComment = Type.Object(
 	{ $id: 'UpdateComment' },
 );
 
-export const actions = createActionHandlers({
+export const actions = createActionHandler({
 	CREATE_COMMENT: ({ request, context, payload }) => {
 		assertUser(request);
 		assertType(CreateComment, payload); // throws Response when invalid

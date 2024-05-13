@@ -21,7 +21,7 @@ async function handleFormSubmission(args: ActionFunctionArgs, handlers: Submissi
 	return handler({ ...args, payload });
 }
 
-export function createActionHandlers(handlers: SubmissionHandlers) {
+export function createActionHandler(handlers: SubmissionHandlers) {
 	return async function action(args: ActionFunctionArgs): Promise<Response> {
 		return await handleFormSubmission(args, handlers).catch((err) => {
 			if (err instanceof Response) return err;
