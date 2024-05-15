@@ -1,6 +1,6 @@
 {
 	"name": "remix-data-kit",
-	"version": "0.9.0",
+	"version": "0.10.0",
 	"description": "a kit to simplify handling form submissions in remix",
 	"license": "MIT",
 	"repository": {
