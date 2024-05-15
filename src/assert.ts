@@ -31,7 +31,8 @@ function isValueError(value: unknown): value is ValueError {
 	if (!Object.values(ValueErrorType).includes(value.type)) return false;
 	if (!('message' in value) || typeof value.message !== 'string') return false;
 	if (!('path' in value) || typeof value.path !== 'string') return false;
-	if (!('value' in value)) return false;
+	// don't check value, type is `unknown` so can be undefined, and thereby omitted in responses
+	// if (!('value' in value)) return false;
 	if (!('schema' in value) || typeof value.schema !== 'object') return false;
 	return true;
 }

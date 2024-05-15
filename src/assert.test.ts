@@ -32,7 +32,7 @@ await test('throws Response when does not pass validation', async () => {
 	const json = await thrown.json();
 	// eslint-disable-next-line @typescript-eslint/no-unsafe-member-access
 	delete json['errors'];
-	assert.deepEqual(json, { ok: false, message: 'Invalid data provided for type: User' });
+	assert.deepEqual(json, { ok: false, message: 'Invalid data provided for type: User.' });
 });
 
 await test('throws no error when all props are valid', () => {
