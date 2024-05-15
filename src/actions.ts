@@ -5,6 +5,8 @@ import { Static, TSchema } from '@sinclair/typebox';
 import { assertType } from './assert.js';
 import { bodyparser, BodyParserOptions } from './internal/body-parser.js';
 
+export type { FileInfo } from './internal/body-parser.js';
+
 const actionIntentKeys = ['action', 'intent', '_action', '_intent'];
 
 function getActionName(url: string) {
