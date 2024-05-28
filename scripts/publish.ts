@@ -8,6 +8,6 @@ if (!releaseType || !['major', 'minor', 'patch'].includes(releaseType)) {
 	process.exit(0);
 }
 
-execSync(`npm run build`, { stdio: 'inherit' });
 execSync(`npm version ${releaseType}`, { stdio: 'inherit' });
+execSync(`npm run build`, { stdio: 'inherit' });
 execSync(`npm publish ./dist`, { stdio: 'inherit' });
