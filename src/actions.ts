@@ -7,6 +7,9 @@ import { bodyparser, BodyParserOptions } from './internal/body-parser.js';
 
 export type { FileInfo } from './internal/body-parser.js';
 
+type Awaited<T> = T extends Promise<infer U> ? U : never;
+type ActionResult = Awaited<ReturnType<ActionFunction>>;
+
 const actionIntentKeys = ['action', 'intent', '_action', '_intent'];
 
 function getActionName(url: string) {
@@ -64,7 +67,7 @@ export type CreateActionArgs<
 > = {
 	name: string;
 	schema?: T;
-	handler: (data: TData, context: AppLoadContext, args: ActionFunctionArgs) => Promise<Response> | Response;
+	handler: (data: TData, context: AppLoadContext, args: ActionFunctionArgs) => Promise<ActionResult> | ActionResult;
 	onFile?: BodyParserOptions['onFile'];
 	limits?: BodyParserOptions['limits'];
 };
@@ -79,7 +82,7 @@ export function createAction<T extends TSchema, TData = T extends TSchema ? Stat
 ): ActionHandler {
 	return {
 		name: handler.name,
-		handle: async function handleAction(args: ActionFunctionArgs): Promise<Response> {
+		handle: async function handleAction(args: ActionFunctionArgs): Promise<ActionResult> {
 			try {
 				const body: unknown = await getRequestBody(args.request, { limits: handler.limits, onFile: handler.onFile });
 				if (handler.schema) assertType(handler.schema, body);
