@@ -14,19 +14,37 @@
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.cts",
-	"bin": "./dist/cli.js",
+	"bin": "./dist/cli.cjs",
 	"exports": {
 		".": {
-			"types": "./dist/index.d.ts",
-			"default": "./dist/index.js"
+			"import": {
+				"types": "./dist/index.d.mts",
+				"default": "./dist/index.mjs"
+			},
+			"require": {
+				"types": "./dist/index.d.cts",
+				"default": "./dist/index.cjs"
+			}
 		},
 		"./register": {
-			"types": "./dist/register.d.ts",
-			"default": "./dist/register.js"
+			"import": {
+				"types": "./dist/register.d.mts",
+				"default": "./dist/register.mjs"
+			},
+			"require": {
+				"types": "./dist/register.d.cts",
+				"default": "./dist/register.cjs"
+			}
 		},
 		"./actions": {
-			"types": "./dist/actions.d.ts",
-			"default": "./dist/actions.js"
+			"import": {
+				"types": "./dist/actions.d.mts",
+				"default": "./dist/actions.mjs"
+			},
+			"require": {
+				"types": "./dist/actions.d.cts",
+				"default": "./dist/actions.cjs"
+			}
 		}
 	},
 	"type": "module",
@@ -34,8 +52,7 @@
 		"node": ">=18"
 	},
 	"scripts": {
-		"dev": "pkgroll --watch",
-		"build": "pkgroll",
+		"build": "tsx ./scripts/build.ts && attw -P ./dist",
 		"prepare": "npx simple-git-hooks",
 		"lint": "eslint --fix .",
 		"type-check": "tsc --noEmit",
@@ -56,6 +73,7 @@
 		"expand"
 	],
 	"devDependencies": {
+		"@arethetypeswrong/cli": "^0.15.3",
 		"@remix-run/node": "^2.9.2",
 		"@remix-run/server-runtime": "^2.9.1",
 		"@sinclair/typebox": "^0.32.0",
@@ -65,11 +83,11 @@
 		"@types/yargs": "^17.0.32",
 		"borp": "^0.13.0",
 		"eslint-plugin-best-practices": "^0.0.1",
-		"pkgroll": "^2.0.2",
 		"pretty-quick": "^4.0.0",
 		"simple-git-hooks": "^2.11.1",
 		"tsx": "^4.9.3",
-		"typescript": "^5.4.5"
+		"typescript": "^5.4.5",
+		"unbuild": "^2.0.0"
 	},
 	"peerDependencies": {
 		"@remix-run/node": "^2.0.0 || ^3.0.0",
