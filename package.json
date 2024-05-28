@@ -14,7 +14,9 @@
 	"main": "./dist/index.cjs",
 	"module": "./dist/index.mjs",
 	"types": "./dist/index.d.cts",
-	"bin": "./dist/cli.cjs",
+	"bin": {
+		"remix-data-kit": "dist/cli.cjs"
+	},
 	"exports": {
 		".": {
 			"import": {
