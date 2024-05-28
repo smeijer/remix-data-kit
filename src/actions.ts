@@ -15,9 +15,8 @@ const actionIntentKeys = ['action', 'intent', '_action', '_intent'];
 function getActionName(url: string) {
 	const searchParams = new URL(url).searchParams;
 
-	if (searchParams.size === 1) {
-		const key = String(searchParams.keys().next().value || '');
-		if (key[0] === '/' && key.length > 1) {
+	for (const [key, value] of searchParams) {
+		if (key[0] === '/' && key.length > 1 && !value) {
 			return key.slice(1);
 		}
 	}
