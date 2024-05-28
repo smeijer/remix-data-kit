@@ -14,7 +14,7 @@ export function assertType<T extends TSchema>(schema: T, value: unknown, message
 		assert(schema, value, message);
 	} catch (e) {
 		if (e instanceof AssertionError) {
-			throw json<SerializedAssertionError>({ ok: false, message: e.message, errors: e.errors });
+			throw json<SerializedAssertionError>({ ok: false, message: e.message, errors: e.errors }, { status: 422 });
 		}
 
 		throw e;
