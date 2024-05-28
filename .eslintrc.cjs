@@ -10,4 +10,13 @@ module.exports = {
 			},
 		],
 	},
+	overrides: [
+		{
+			files: ['./scripts/**/*.ts'],
+			parserOptions: {
+				tsconfigRootDir: __dirname,
+				project: ['./tsconfig.eslint.json'],
+			},
+		},
+	],
 };

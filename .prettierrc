@@ -3,5 +3,14 @@
 	"trailingComma": "all",
 	"printWidth": 120,
 	"semi": true,
-	"useTabs": true
+	"useTabs": true,
+	"overrides": [
+		{
+			"files": "*.md",
+			"options": {
+				"useTabs": false,
+				"tabWidth": 2
+			}
+		}
+	]
 }
