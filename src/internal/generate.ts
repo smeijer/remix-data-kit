@@ -90,7 +90,11 @@ async function convert(input: string, output: string, type?: string) {
 	let result = await schema2typebox({ input: jsonSchema });
 
 	result = result.slice(result.indexOf('*/') + 2).trim();
-	result = `/* eslint-disable @typescript-eslint/no-explicit-any */\n` + result;
+	result =
+		`/**\n * THIS CODE IS GENERATED USING REMIX-DATA-KIT\n * DO NOT EDIT MANUALLY\n */\n` +
+		`import { Schema } from '@cfworker/json-schema';\n` +
+		result;
+
 	result = result.replace(typeRegex, 'export type $1Type =');
 	result = result.replace(/Static<\s*typeof (.*?)\s*>/, 'Static<typeof $1Schema>');
 	result = result.replace(schemaRegex, '\nexport const $1Schema =');
