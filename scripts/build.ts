@@ -42,9 +42,21 @@ pkgJson = removeRedundantFields(pkgJson);
 pkgJson = replaceDistPaths(pkgJson);
 await fs.writeFile('./dist/package.json', JSON.stringify(pkgJson, null, 2), 'utf-8');
 
-if ('bin' in pkgJson && typeof pkgJson['bin'] === 'string') {
-	const binName = path.basename(pkgJson['bin'], path.extname(pkgJson['bin']));
-	for (const dts of ['.d.ts', '.d.cts', '.d.mts']) {
-		await fs.unlink(path.join('./dist', binName + dts)).catch(() => void 0);
+if ('bin' in pkgJson) {
+	for (const entry of Object.values(pkgJson['bin'] || {})) {
+		if (typeof entry !== 'string') continue;
+
+		const ext = path.extname(entry);
+		const binName = path.basename(entry, ext);
+		const otherExts = ['.d.ts', '.d.cts', '.d.mts', '.mjs', '.cjs', '.js'].filter((x) => x !== ext);
+
+		for (const dts of otherExts) {
+			await fs.unlink(path.join('./dist', binName + dts)).catch(() => void 0);
+		}
+
+		const filePath = path.join('./dist', entry);
+		const src = await fs.readFile(filePath, 'utf-8');
+		if (src.startsWith('#!')) continue;
+		await fs.writeFile(filePath, `#!/usr/bin/env node\n${src}`, 'utf-8');
 	}
 }
