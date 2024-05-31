@@ -39,19 +39,22 @@ async function convert(input: string, output: string, type?: string) {
 	const file = readFileSync(input, 'utf-8');
 	const json: any = JSON.parse(file);
 
-	json.title = json.title ? pascalCase(String(json.title)) : type;
+	type = json.title ? pascalCase(String(json.title)) : type;
+	json.title = type;
 
 	if (!json.title) {
 		throw new Error(`unable to determine type name, schema does not contain a title, nor was a type provided.`);
 	}
 
-	let result = await schema2typebox({ input: JSON.stringify(json) });
+	const jsonSchema = JSON.stringify(json, null, 2);
+	let result = await schema2typebox({ input: jsonSchema });
 
 	result = result.slice(result.indexOf('*/') + 2).trim();
 	result = `/* eslint-disable @typescript-eslint/no-explicit-any */\n` + result;
 	result = result.replace(typeRegex, 'export type $1Type =');
 	result = result.replace(/Static<\s*typeof (.*?)\s*>/, 'Static<typeof $1Schema>');
 	result = result.replace(schemaRegex, '\nexport const $1Schema =');
+	result += `\n\nexport const ${type}JSONSchema = Type.Strict(${type}Schema);`;
 	result += '\n';
 
 	mkdirSync(path.dirname(output), { recursive: true });
