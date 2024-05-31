@@ -125,6 +125,11 @@ export async function generate({ pattern, outdir, format, cwd }: GenerateOptions
 		};
 	});
 
+	if (!files.length) {
+		console.log(`no files found matching pattern ${pattern}`);
+		return;
+	}
+
 	const basePath = getBasePath(files.map((x) => x.input));
 
 	const tasks = new Listr(
@@ -142,6 +147,8 @@ export async function generate({ pattern, outdir, format, cwd }: GenerateOptions
 }
 
 function getBasePath(files: string[]) {
+	if (files.length === 0) return '';
+
 	const sortedArr = files.concat().sort();
 
 	const first = sortedArr[0]!;
