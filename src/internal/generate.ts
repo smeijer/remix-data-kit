@@ -32,6 +32,46 @@ const sandbox = {
 
 vm.createContext(sandbox);
 
+function cleanImports(content: string) {
+	const lines = content.split('\n');
+
+	for (let idx = lines.length; idx >= 0; idx--) {
+		const line = lines[idx] || '';
+
+		if (!line.startsWith('import')) {
+			continue;
+		}
+
+		const importSegments = line.split(/[{,}]/).map((x) => x.trim());
+		const usedImports: string[] = [];
+
+		for (const segment of importSegments.slice(1, -1)) {
+			if (
+				!lines.some(
+					(x) =>
+						x.includes(`${segment}.`) ||
+						x.includes(`${segment}<`) ||
+						x.includes(`<${segment}>`) ||
+						x.includes(`: ${segment}`),
+				)
+			) {
+				continue;
+			}
+
+			usedImports.push(segment);
+		}
+
+		if (!usedImports.length) {
+			lines.splice(idx, 1);
+			continue;
+		}
+
+		lines[idx] = `${importSegments.at(0)} { ${usedImports.join(', ')} } ${importSegments.at(-1)}`;
+	}
+
+	return lines.join('\n');
+}
+
 const typeRegex = /export type (.*?) =/i;
 const schemaRegex = /export const (.*?) =/i;
 
@@ -56,6 +96,8 @@ async function convert(input: string, output: string, type?: string) {
 	result = result.replace(schemaRegex, '\nexport const $1Schema =');
 	result += `\n\nexport const ${type}JSONSchema = Type.Strict(${type}Schema);`;
 	result += '\n';
+
+	result = cleanImports(result);
 
 	mkdirSync(path.dirname(output), { recursive: true });
 	writeFileSync(output, result);
