@@ -1,6 +1,6 @@
 {
 	"name": "remix-data-kit",
-	"version": "0.16.0",
+	"version": "0.17.0",
 	"description": "a kit to simplify handling form submissions in remix",
 	"license": "MIT",
 	"repository": {
@@ -11,41 +11,22 @@
 	"author": "Stephan Meijer <stephan.meijer@gmail.com> (meijer.ws)",
 	"bugs": "https://github.com/smeijer/remix-data-kit/issues",
 	"homepage": "https://github.com/smeijer/remix-data-kit#readme",
-	"main": "./dist/index.cjs",
-	"module": "./dist/index.mjs",
-	"types": "./dist/index.d.cts",
+	"main": "./dist/commonjs/index.js",
+	"module": "./dist/esm/index.js",
+	"types": "./dist/commonjs/index.d.ts",
 	"bin": {
-		"remix-data-kit": "./dist/cli.cjs"
+		"remix-data-kit": "./dist/esm/cli.mjs"
 	},
 	"exports": {
+		"./package.json": "./package.json",
 		".": {
 			"import": {
-				"types": "./dist/index.d.mts",
-				"default": "./dist/index.mjs"
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
 			},
 			"require": {
-				"types": "./dist/index.d.cts",
-				"default": "./dist/index.cjs"
-			}
-		},
-		"./register": {
-			"import": {
-				"types": "./dist/register.d.mts",
-				"default": "./dist/register.mjs"
-			},
-			"require": {
-				"types": "./dist/register.d.cts",
-				"default": "./dist/register.cjs"
-			}
-		},
-		"./actions": {
-			"import": {
-				"types": "./dist/actions.d.mts",
-				"default": "./dist/actions.mjs"
-			},
-			"require": {
-				"types": "./dist/actions.d.cts",
-				"default": "./dist/actions.cjs"
+				"types": "./dist/commonjs/index.d.ts",
+				"default": "./dist/commonjs/index.js"
 			}
 		}
 	},
@@ -53,13 +34,21 @@
 	"engines": {
 		"node": ">=18"
 	},
+	"tshy": {
+		"exclude": [
+			"src/**/*.test.ts"
+		],
+		"exports": {
+			"./package.json": "./package.json",
+			".": "./src/index.ts"
+		}
+	},
 	"scripts": {
-		"build": "tsx ./scripts/build.ts && attw -P ./dist",
+		"build": "tshy && attw -P",
 		"prepare": "npx simple-git-hooks",
 		"lint": "eslint --fix .",
 		"type-check": "tsc --noEmit",
-		"test": "borp",
-		"prepack": "npm run build"
+		"test": "borp"
 	},
 	"simple-git-hooks": {
 		"pre-commit": "pretty-quick --staged"
@@ -87,6 +76,7 @@
 		"eslint-plugin-best-practices": "^0.0.1",
 		"pretty-quick": "^4.0.0",
 		"simple-git-hooks": "^2.11.1",
+		"tshy": "^3.0.2",
 		"tsx": "^4.9.3",
 		"typescript": "^5.4.5",
 		"unbuild": "^2.0.0"
@@ -100,17 +90,16 @@
 	"dependencies": {
 		"@types/busboy": "^1.5.4",
 		"@types/bytes": "^3.1.4",
-		"attr-accept": "^2.2.2",
 		"busboy": "^1.6.0",
 		"bytes": "^3.1.2",
-		"form-data-kit": "^1.0.0",
+		"form-data-kit": "^1.1.0",
 		"glob": "^10.3.12",
 		"listr2": "^8.2.1",
 		"picocolors": "^1.0.0",
-		"picoid": "^1.1.3",
+		"picoid": "^1.2.0",
 		"schema2typebox": "^1.7.4",
 		"ts-morph": "^23.0.0",
-		"typebox-assert": "^0.4.0",
+		"typebox-assert": "^0.5.0",
 		"yargs": "^17.7.2"
 	}
 }

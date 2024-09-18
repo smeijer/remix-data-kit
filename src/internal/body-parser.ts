@@ -5,20 +5,17 @@ import { Readable } from 'node:stream';
 import { ReadableStream } from 'node:stream/web';
 
 import { ValueError } from '@sinclair/typebox/errors';
-import Accept from 'attr-accept';
 import Busboy, { FieldInfo } from 'busboy';
 import bytes from 'bytes';
 import { setField } from 'form-data-kit';
 import fs from 'fs';
 import path from 'path';
-import Picoid from 'picoid';
+import picoid from 'picoid';
 
 import { isAssertionError } from '../assert.js';
 import { ensureArray, oneOf } from './arrays.js';
+import { accept } from './attr-accept.js';
 import { BodyParserError } from './errors.js';
-
-const picoid = Picoid.default;
-const accept = Accept.default;
 
 type ContentType = 'application/json' | 'application/x-www-form-urlencoded' | 'multipart/form-data';
 
