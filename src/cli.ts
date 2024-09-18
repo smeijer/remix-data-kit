@@ -4,7 +4,7 @@ import yargs from 'yargs/yargs';
 import { generate } from './internal/generate.js';
 
 void yargs(hideBin(process.argv))
-	.command<{ pattern: string; outdir: string; format?: string; cwd?: string }>(
+	.command<{ pattern: string; outdir: string; dryRun?: boolean; format?: string; cwd?: string }>(
 		'generate-types',
 		'generate typebox types from json schemas',
 		(y) => {
@@ -34,16 +34,24 @@ void yargs(hideBin(process.argv))
 					description: `provide a working directory`,
 					requiresArg: true,
 				})
+				.option('dry-run', {
+					type: 'boolean',
+					description: `only check if generated files need updating, don't actually update them`,
+					requiresArg: false,
+				})
 				.demandOption('pattern')
 				.demandOption('outdir');
 		},
-		(argv) => {
-			return generate({
+		async (argv) => {
+			const success = await generate({
 				pattern: argv.pattern,
 				outdir: argv.outdir,
 				format: argv.format,
 				cwd: argv.cwd || process.cwd(),
+				dryRun: argv.dryRun,
 			});
+
+			process.exit(success ? 0 : 1);
 		},
 	)
 	.demandCommand()

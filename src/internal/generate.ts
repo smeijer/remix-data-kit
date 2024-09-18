@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any,@typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-unsafe-member-access,no-console */
-import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import * as path from 'node:path';
 
 import * as TypeBox from '@sinclair/typebox';
@@ -9,6 +9,8 @@ import { Listr } from 'listr2';
 import colors from 'picocolors';
 import { schema2typebox } from 'schema2typebox';
 import vm from 'vm';
+
+import { isStructurallySame } from './ast.js';
 
 TypeBox.TypeRegistry.Set(
 	'ExtendedOneOf',
@@ -75,7 +77,7 @@ function cleanImports(content: string) {
 const typeRegex = /export type (.*?) =/i;
 const schemaRegex = /export const (.*?) =/i;
 
-async function convert(input: string, output: string, type?: string) {
+async function convert(input: string, output: string, type?: string, dryRun?: boolean) {
 	const file = readFileSync(input, 'utf-8');
 	const json: any = JSON.parse(file);
 
@@ -103,8 +105,20 @@ async function convert(input: string, output: string, type?: string) {
 
 	result = cleanImports(result);
 
-	mkdirSync(path.dirname(output), { recursive: true });
-	writeFileSync(output, result);
+	if (dryRun) {
+		if (!existsSync(output)) {
+			throw new Error(`${output} doesn't exist, and needs to be generated.`);
+		}
+
+		const current = readFileSync(output, 'utf-8');
+		const equal = await isStructurallySame(current, result);
+		if (!equal) {
+			throw new Error(`${output} is outdated, and needs to be regenerated.`);
+		}
+	} else {
+		mkdirSync(path.dirname(output), { recursive: true });
+		writeFileSync(output, result);
+	}
 }
 
 type GenerateOptions = {
@@ -112,8 +126,10 @@ type GenerateOptions = {
 	outdir: string;
 	format?: string;
 	cwd?: string;
+	dryRun?: boolean;
 };
-export async function generate({ pattern, outdir, format, cwd }: GenerateOptions) {
+
+export async function generate({ pattern, outdir, format, cwd, dryRun }: GenerateOptions): Promise<boolean> {
 	cwd = cwd ? path.resolve(cwd) : process.cwd();
 	const files = extractParts(pattern, await glob(pattern, { nocase: true, cwd, absolute: true })).map((x) => {
 		const output = kebabcase(format ? formatString(x.matches, format) : x.matches.join('-'));
@@ -127,7 +143,7 @@ export async function generate({ pattern, outdir, format, cwd }: GenerateOptions
 
 	if (!files.length) {
 		console.log(`no files found matching pattern ${pattern}`);
-		return;
+		return true;
 	}
 
 	const basePath = getBasePath(files.map((x) => x.input));
@@ -135,15 +151,16 @@ export async function generate({ pattern, outdir, format, cwd }: GenerateOptions
 	const tasks = new Listr(
 		files.map((file) => ({
 			title: `generate: ${file.output} ${colors.dim(`(input: ${file.input.replace(basePath, '')})`)}`,
-			task: async () => convert(file.input, file.output, file.type),
+			task: async () => convert(file.input, file.output, file.type, dryRun),
 		})),
+		{
+			collectErrors: 'full',
+			exitOnError: false,
+		},
 	);
 
-	try {
-		await tasks.run();
-	} catch (e) {
-		console.error(e);
-	}
+	await tasks.run();
+	return tasks.errors.length === 0;
 }
 
 function getBasePath(files: string[]) {
