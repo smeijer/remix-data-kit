@@ -4,3 +4,7 @@ yarn.lock
 tsconfig.tsbuildinfo
 /.tshy
 /.tshy-build
+
+# all package.jsons, but not the one in the root
+**/package.json
+!/package.json

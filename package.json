@@ -17,19 +17,6 @@
 	"bin": {
 		"remix-data-kit": "./dist/esm/cli.mjs"
 	},
-	"exports": {
-		"./package.json": "./package.json",
-		".": {
-			"import": {
-				"types": "./dist/esm/index.d.ts",
-				"default": "./dist/esm/index.js"
-			},
-			"require": {
-				"types": "./dist/commonjs/index.d.ts",
-				"default": "./dist/commonjs/index.js"
-			}
-		}
-	},
 	"type": "module",
 	"engines": {
 		"node": ">=18"
@@ -38,13 +25,12 @@
 		"exclude": [
 			"src/**/*.test.ts"
 		],
-		"exports": {
-			"./package.json": "./package.json",
-			".": "./src/index.ts"
-		}
+		"exports": [
+			"./src/*.ts"
+		]
 	},
 	"scripts": {
-		"build": "tshy && attw -P",
+		"build": "tshy && tsx scripts/fix-exports.ts && tsx scripts/fix-node10.ts && attw -P",
 		"prepare": "npx simple-git-hooks",
 		"lint": "eslint --fix .",
 		"type-check": "tsc --noEmit",
@@ -55,7 +41,14 @@
 	},
 	"files": [
 		"dist",
-		"license"
+		"license",
+		"/actions.test/package.json",
+		"/actions/package.json",
+		"/assert.test/package.json",
+		"/assert/package.json",
+		"/register/package.json",
+		"/stream/package.json",
+		"/unwrap/package.json"
 	],
 	"keywords": [
 		"formdata",
@@ -101,5 +94,68 @@
 		"ts-morph": "^23.0.0",
 		"typebox-assert": "^0.5.0",
 		"yargs": "^17.7.2"
+	},
+	"exports": {
+		"./actions": {
+			"import": {
+				"types": "./dist/esm/actions.d.ts",
+				"default": "./dist/esm/actions.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/actions.d.ts",
+				"default": "./dist/commonjs/actions.js"
+			}
+		},
+		"./assert": {
+			"import": {
+				"types": "./dist/esm/assert.d.ts",
+				"default": "./dist/esm/assert.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/assert.d.ts",
+				"default": "./dist/commonjs/assert.js"
+			}
+		},
+		".": {
+			"import": {
+				"types": "./dist/esm/index.d.ts",
+				"default": "./dist/esm/index.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/index.d.ts",
+				"default": "./dist/commonjs/index.js"
+			}
+		},
+		"./register": {
+			"import": {
+				"types": "./dist/esm/register.d.ts",
+				"default": "./dist/esm/register.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/register.d.ts",
+				"default": "./dist/commonjs/register.js"
+			}
+		},
+		"./stream": {
+			"import": {
+				"types": "./dist/esm/stream.d.ts",
+				"default": "./dist/esm/stream.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/stream.d.ts",
+				"default": "./dist/commonjs/stream.js"
+			}
+		},
+		"./unwrap": {
+			"import": {
+				"types": "./dist/esm/unwrap.d.ts",
+				"default": "./dist/esm/unwrap.js"
+			},
+			"require": {
+				"types": "./dist/commonjs/unwrap.d.ts",
+				"default": "./dist/commonjs/unwrap.js"
+			}
+		},
+		"./package.json": "./package.json"
 	}
 }
