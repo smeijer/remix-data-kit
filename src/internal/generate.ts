@@ -100,7 +100,6 @@ async function convert(input: string, output: string, type?: string, dryRun?: bo
 	result = result.replace(typeRegex, 'export type $1Type =');
 	result = result.replace(/Static<\s*typeof (.*?)\s*>/, 'Static<typeof $1Schema>');
 	result = result.replace(schemaRegex, '\nexport const $1Schema =');
-	result += `\n\nexport const ${type}JSONSchema = Type.Strict(${type}Schema);`;
 	result += '\n';
 
 	result = cleanImports(result);
